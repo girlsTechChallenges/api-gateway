@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: check-health-service
+          uri: lb://check-health
+          predicates:
+            - Path=/goals/**
