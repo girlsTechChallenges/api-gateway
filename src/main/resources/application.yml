@@ -2,31 +2,35 @@ spring:
   application:
     name: api-gateway
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:http://config-service:8888
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
-
+      routes:
+        - id: check-health-service
+          uri: lb://check-health-service
+          predicates:
+            - Path=/api/v1/goals/**
+          filters:
+            - StripPrefix=2
+    
 server:
   port: 8080
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
-    fetch-registry: true
+      defaultZone: http://discovery-service:8761/eureka/
     register-with-eureka: true
+    fetch-registry: true
   instance:
     prefer-ip-address: true
+    hostname: api-gateway
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        include: health,info,metrics
   endpoint:
     health:
       show-details: always

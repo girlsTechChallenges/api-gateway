@@ -3,6 +3,6 @@ spring:
     gateway:
       routes:
         - id: check-health-service
-          uri: lb://check-health
+          uri: lb://check-health-service
           predicates:
-            - Path=/goals/**
+            - Path=/api/check-health/**
